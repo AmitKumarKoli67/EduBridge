@@ -1,0 +1,2 @@
+D:/Work/deployed projects/EduBridge/frontend/android/app/.cxx/Debug/69662o5q/x86/CMakeFiles/edit_cache.dir
+D:/Work/deployed projects/EduBridge/frontend/android/app/.cxx/Debug/69662o5q/x86/CMakeFiles/rebuild_cache.dir

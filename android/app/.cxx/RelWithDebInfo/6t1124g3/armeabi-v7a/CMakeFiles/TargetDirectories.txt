@@ -1,0 +1,2 @@
+D:/Work/hackathon projects/edubridge/android/app/.cxx/RelWithDebInfo/6t1124g3/armeabi-v7a/CMakeFiles/edit_cache.dir
+D:/Work/hackathon projects/edubridge/android/app/.cxx/RelWithDebInfo/6t1124g3/armeabi-v7a/CMakeFiles/rebuild_cache.dir
