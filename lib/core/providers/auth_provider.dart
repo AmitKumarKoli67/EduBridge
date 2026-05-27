@@ -1,6 +1,6 @@
 // providers/auth_provider.dart
-import 'package:edubridge/domain/models/user_model.dart';
-import 'package:edubridge/services/auth_services.dart';
+import 'package:scholr/domain/models/user_model.dart';
+import 'package:scholr/services/auth_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 

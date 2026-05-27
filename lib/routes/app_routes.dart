@@ -1,8 +1,8 @@
 // routes/app_routes.dart
-import 'package:edubridge/features/presentation/auth/screens/dashboard_screen.dart';
-import 'package:edubridge/features/presentation/auth/screens/home_screen.dart';
-import 'package:edubridge/features/presentation/auth/screens/login_screen.dart';
-import 'package:edubridge/features/presentation/auth/screens/signup_screen.dart';
+import 'package:scholr/features/presentation/auth/screens/dashboard_screen.dart';
+import 'package:scholr/features/presentation/auth/screens/home_screen.dart';
+import 'package:scholr/features/presentation/auth/screens/login_screen.dart';
+import 'package:scholr/features/presentation/auth/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 
 class AppRoutes {

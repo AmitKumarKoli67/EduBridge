@@ -1,4 +1,4 @@
-import 'package:edubridge/features/presentation/common/notice_screen.dart';
+import 'package:scholr/features/presentation/common/notice_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/providers/navigation_provider.dart';
@@ -7,10 +7,10 @@ import 'assignment_screen.dart';
 import 'query_screen.dart';
 import 'notification_screen.dart';
 import 'profile_screen.dart';
-import 'package:edubridge/features/presentation/auth/screens/event_screen.dart';
-import 'package:edubridge/features/presentation/auth/screens/result_screen.dart';
-import 'package:edubridge/features/presentation/auth/screens/prizes_screen.dart';
-import 'package:edubridge/features/presentation/auth/screens/teacher_screen.dart';
+import 'package:scholr/features/presentation/auth/screens/event_screen.dart';
+import 'package:scholr/features/presentation/auth/screens/result_screen.dart';
+import 'package:scholr/features/presentation/auth/screens/prizes_screen.dart';
+import 'package:scholr/features/presentation/auth/screens/teacher_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});

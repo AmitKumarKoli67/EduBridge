@@ -1,6 +1,6 @@
 {
-    "name": "edubridge",
-    "short_name": "edubridge",
+    "name": "scholr",
+    "short_name": "scholr",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

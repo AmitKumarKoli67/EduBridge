@@ -1,6 +1,6 @@
 // presentation/screens/login_screen.dart
-import 'package:edubridge/core/providers/auth_provider.dart';
-import 'package:edubridge/routes/app_routes.dart';
+import 'package:scholr/core/providers/auth_provider.dart';
+import 'package:scholr/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

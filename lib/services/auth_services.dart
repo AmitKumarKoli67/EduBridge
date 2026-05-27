@@ -1,7 +1,7 @@
 // services/auth_services.dart
 import 'dart:convert';
-import 'package:edubridge/domain/models/user_model.dart';
-import 'package:edubridge/utils/constants.dart';
+import 'package:scholr/domain/models/user_model.dart';
+import 'package:scholr/utils/constants.dart';
 import 'package:http/http.dart' as http;
 
 class AuthService {
