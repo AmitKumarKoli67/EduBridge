@@ -1,8 +1,8 @@
 # 📚 EduBridge – Connecting Parents & Teachers 
 
-> ⚠️ **The backend is currently under development. Please stay tuned — I'll update the APK soon to integrate all backend features!**
+> ✅ **APK is available!** Backend is still in development — some features may use mock data.
 
-[![Download APK](https://img.shields.io/badge/Download-APK-blue)](https://Amitkumarkoli.github.io/EduBridge/EduBridge.apk)
+[![Download APK](https://img.shields.io/badge/Download-APK-brightgreen?style=for-the-badge&logo=android)](https://github.com/AmitKumarKoli67/EduBridge/releases/latest/download/scholr.apk)
 
 
 **EduBridge** is a smart communication platform that bridges the gap between **parents and teachers**, creating a collaborative environment to enhance student growth and academic transparency. With secure messaging, progress tracking, and event updates, EduBridge simplifies communication and brings school and home closer together.
