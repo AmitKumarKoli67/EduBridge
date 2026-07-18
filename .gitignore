@@ -86,3 +86,7 @@ coverage/
 # Misc Flutter artifacts
 # ========================
 app.*.symbols
+
+# Firebase
+lib/firebase_options.dart
+android/app/google-services.json
