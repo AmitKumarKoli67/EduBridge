@@ -1,8 +1,10 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:scholr/core/providers/auth_provider.dart';
 import 'package:scholr/features/presentation/auth/screens/dashboard_screen.dart';
 import 'package:scholr/features/presentation/auth/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:scholr/firebase_options.dart';
 import 'core/providers/language_provider.dart';
 import 'core/providers/navigation_provider.dart';
 import 'core/providers/theme_provider.dart';
@@ -10,7 +12,11 @@ import 'routes/app_routes.dart';
 import 'theme.dart/theme.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -42,21 +48,13 @@ class MyApp extends StatelessWidget {
               GlobalCupertinoLocalizations.delegate,
             ],
             routes: AppRoutes.routes,
-            home: FutureBuilder<bool>(
-              future: authProvider.tryAutoLogin(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Scaffold(
+            home: authProvider.isInitializing
+                ? const Scaffold(
                     body: Center(child: CircularProgressIndicator()),
-                  );
-                }
-                if (snapshot.data == true || authProvider.isLoggedIn) {
-                  return const DashboardScreen();
-                }
-                return const LoginScreen();
-              },
-            ),
-            // home: const DashboardScreen(),
+                  )
+                : (authProvider.isLoggedIn
+                    ? const DashboardScreen()
+                    : const LoginScreen()),
           );
         },
       ),

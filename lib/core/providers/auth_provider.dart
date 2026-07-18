@@ -1,49 +1,141 @@
-// providers/auth_provider.dart
-import 'package:scholr/domain/models/user_model.dart';
-import 'package:scholr/services/auth_services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AuthProvider extends ChangeNotifier {
-  final _storage = FlutterSecureStorage();
-  final _authService = AuthService();
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  UserModel? _user;
-  UserModel? get user => _user;
+  User? _user; // the raw Firebase user (uid, email, etc.)
+  String? _name; // pulled from Firestore
+  String? _role; // pulled from Firestore
+  bool _isInitializing = true; // true until we know the starting login state
+  bool _isLoading = false; // true while a login/signup request is in flight
+  String? _errorMessage;
+
+  User? get user => _user;
+  String? get name => _name;
+  String? get role => _role;
   bool get isLoggedIn => _user != null;
+  bool get isInitializing => _isInitializing;
+  bool get isLoading => _isLoading;
+  String? get errorMessage => _errorMessage;
 
-  Future<void> signup(String name, String email, String password, String role) async {
-    _user = await _authService.signup({
-      'name': name,
-      'email': email,
-      'password': password,
-      'role': role,
-    });
-    await _storage.write(key: 'token', value: _user!.token);
+  AuthProvider() {
+    // This line replaces your old tryAutoLogin() completely.
+    // Firebase checks on its own whether a session is already saved on
+    // this device, and fires this listener with the result automatically.
+    _firebaseAuth.authStateChanges().listen(_onAuthStateChanged);
+  }
+
+  Future<void> _onAuthStateChanged(User? firebaseUser) async {
+    _user = firebaseUser;
+    if (firebaseUser != null) {
+      await _loadUserData(firebaseUser.uid);
+    } else {
+      _name = null;
+      _role = null;
+    }
+    _isInitializing = false; // we now know the real login state
     notifyListeners();
   }
 
-  Future<void> login(String email, String password, String role) async {
-    _user = await _authService.login({
-      'email': email,
-      'password': password,
-      'role': role,
-    });
-    await _storage.write(key: 'token', value: _user!.token);
+  Future<void> _loadUserData(String uid) async {
+    final doc = await _firestore.collection('users').doc(uid).get();
+    if (doc.exists) {
+      _name = doc.data()?['name'] as String?;
+      _role = doc.data()?['role'] as String?;
+    }
+  }
+
+  /// Creates a new Firebase user, then saves their profile (name, role)
+  /// to Firestore under the same UID. Returns true on success.
+  Future<bool> signup({
+    required String name,
+    required String email,
+    required String password,
+    required String role,
+  }) async {
+    _isLoading = true;
+    _errorMessage = null;
     notifyListeners();
+    try {
+      final credential = await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email.trim(),
+        password: password,
+      );
+
+      await _firestore.collection('users').doc(credential.user!.uid).set({
+        'name': name,
+        'email': email.trim(),
+        'role': role,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+
+      _name = name;
+      _role = role;
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } on FirebaseAuthException catch (e) {
+      _errorMessage = _mapError(e.code);
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  /// Signs an existing user in. Role is NOT needed here — Firebase only
+  /// checks email + password. Role is read back automatically via
+  /// authStateChanges() -> _loadUserData() above.
+  Future<bool> login({
+    required String email,
+    required String password,
+  }) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+    try {
+      await _firebaseAuth.signInWithEmailAndPassword(
+        email: email.trim(),
+        password: password,
+      );
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } on FirebaseAuthException catch (e) {
+      _errorMessage = _mapError(e.code);
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
   }
 
   Future<void> logout() async {
-    _user = null;
-    await _storage.delete(key: 'token');
-    notifyListeners();
+    await _firebaseAuth.signOut();
+    // authStateChanges() fires automatically after this, clearing _user.
   }
 
-  Future<bool> tryAutoLogin() async {
-    final token = await _storage.read(key: 'token');
-    if (token == null) return false;
-    // In a real app, you'd validate the token with the backend here.
-    // For now, we'll assume it's valid if it exists to make the demo smooth.
-    return true;
+  // Firebase throws specific error "codes" — we translate them into
+  // messages a real user can understand instead of showing raw codes.
+  String _mapError(String code) {
+    switch (code) {
+      case 'email-already-in-use':
+        return 'An account already exists with this email.';
+      case 'invalid-email':
+        return 'That email address looks invalid.';
+      case 'weak-password':
+        return 'Password should be at least 6 characters.';
+      case 'user-not-found':
+      case 'wrong-password':
+      case 'invalid-credential':
+        return 'Incorrect email or password.';
+      case 'too-many-requests':
+        return 'Too many attempts. Please try again later.';
+      case 'network-request-failed':
+        return 'Network error. Check your connection.';
+      default:
+        return 'Something went wrong. Please try again.';
+    }
   }
 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "765954495105",
+    "project_id": "scholr-c057b",
+    "storage_bucket": "scholr-c057b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:765954495105:android:d0aa209f541eab33197380",
+        "android_client_info": {
+          "package_name": "com.example.edubridge"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrcJXOCTZunV0Dch2pyJJszYAaooNFSpw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

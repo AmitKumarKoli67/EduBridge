@@ -1,3 +1,4 @@
+import 'package:scholr/core/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/providers/language_provider.dart';
@@ -13,6 +14,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final languageProvider = Provider.of<LanguageProvider>(context);
+    final authProvider = Provider.of<AuthProvider>(context);
 
     return SafeArea(
       child: Scaffold(
@@ -32,18 +34,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        languageProvider.texts['parent_name'] ?? 'Parent Name',
+                        authProvider.name ?? 'Parent Name',
                         style: const TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
-                        languageProvider.texts['parent_email'] ??
-                            'parent.email@example.com',
+                        authProvider.user?.email ?? 'parent.email@example.com',
                         style: const TextStyle(
                           fontSize: 16,
                           color: Colors.grey,
+                        ),
+                      ),
+                      Text(
+                        (authProvider.role ?? '').toUpperCase(),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.blueGrey,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ],
@@ -89,16 +98,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   subtitle: const Text('2023-2024'),
                 ),
                 const SizedBox(height: 20),
-                Center(
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      child: Text(
-                        languageProvider.texts['edit_profile'] ??
-                            'Edit Profile',
-                      ),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    child: Text(
+                      languageProvider.texts['edit_profile'] ?? 'Edit Profile',
                     ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.red,
+                      side: const BorderSide(color: Colors.red),
+                    ),
+                    onPressed: () async {
+                      await authProvider.logout();
+                    },
+                    icon: const Icon(Icons.logout),
+                    label: const Text('Logout'),
                   ),
                 ),
               ],
