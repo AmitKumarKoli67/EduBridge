@@ -19,8 +19,20 @@ jobs:
 
       - name: Restore Firebase config files
         run: |
-          echo "${{ secrets.GOOGLE_SERVICES_JSON_B64 }}" | base64 --decode > android/app/google-services.json
-          echo "${{ secrets.FIREBASE_OPTIONS_DART_B64 }}" | base64 --decode > lib/firebase_options.dart
+          mkdir -p android/app lib
+          if [ -n "${{ secrets.GOOGLE_SERVICES_JSON_B64 }}" ]; then
+            echo "${{ secrets.GOOGLE_SERVICES_JSON_B64 }}" | base64 --decode > android/app/google-services.json
+          else
+            echo "::error::Secret GOOGLE_SERVICES_JSON_B64 is missing or empty in GitHub Secrets!"
+            exit 1
+          fi
+
+          if [ -n "${{ secrets.FIREBASE_OPTIONS_DART_B64 }}" ]; then
+            echo "${{ secrets.FIREBASE_OPTIONS_DART_B64 }}" | base64 --decode > lib/firebase_options.dart
+          else
+            echo "::error::Secret FIREBASE_OPTIONS_DART_B64 is missing or empty in GitHub Secrets!"
+            exit 1
+          fi
 
       - name: Set up Java
         uses: actions/setup-java@v4
@@ -31,7 +43,6 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.41.4'
           channel: 'stable'
           cache: true
 
