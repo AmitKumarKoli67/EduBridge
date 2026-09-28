@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import '../../../../domain/models/assignment_model.dart';
 
 class AssignmentDetailScreen extends StatefulWidget {
-  final Map<String, String> assignment;
+  final AssignmentModel assignment;
 
   const AssignmentDetailScreen({super.key, required this.assignment});
 
@@ -12,48 +13,80 @@ class AssignmentDetailScreen extends StatefulWidget {
 class _AssignmentDetailScreenState extends State<AssignmentDetailScreen> {
   @override
   Widget build(BuildContext context) {
+    final assignment = widget.assignment;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Assignment Details')),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Assignment Overview 📝',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            Text('Title: ${widget.assignment['title']}'),
-            Text('Subject: ${widget.assignment['subject']}'),
-            Text('Assigned Date: ${widget.assignment['assignedDate']}'),
-            Text('Due Date: ${widget.assignment['dueDate']}'),
+            const Text(
+              'Assignment Overview 📝',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            Card(
+              elevation: 1,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Title: ${assignment.title}',
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 4),
+                    Text('Subject: ${assignment.subject}'),
+                    const SizedBox(height: 4),
+                    Text('Assigned Date: ${assignment.assignedDate}'),
+                    const SizedBox(height: 4),
+                    Text('Due Date: ${assignment.dueDate}'),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Status: ${assignment.status == 'Submitted' ? '✅ Submitted' : '❌ Not Submitted'}',
+                      style: TextStyle(
+                        color: assignment.status == 'Submitted'
+                            ? Colors.green
+                            : Colors.red,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Assignment Description 📄',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 6),
             Text(
-                'Status: ${widget.assignment['status'] == 'Submitted' ? '✅ Submitted' : '❌ Not Submitted'}'),
+              assignment.description.isNotEmpty
+                  ? assignment.description
+                  : 'No description provided.',
+              style: const TextStyle(fontSize: 14, color: Colors.black87),
+            ),
             const SizedBox(height: 16),
-            const Text('Assignment Description 📄',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            Text(widget.assignment['description']!),
-            const SizedBox(height: 16),
-            const Text('Attached Files 📎',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            widget.assignment['attachedFile']!.isNotEmpty
-                ? TextButton(
-                    onPressed: () {},
-                    child: Text(
-                        '[Download: ${widget.assignment['attachedFile']}]'),
-                  )
-                : const Text('No files attached'),
-            const SizedBox(height: 16),
-            if (widget.assignment['submissionDate']!.isNotEmpty) ...[
-              const Text('Submission Details 📤',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              Text('Submission Date: ${widget.assignment['submissionDate']}'),
-              const SizedBox(height: 16),
-            ],
-            if (widget.assignment['feedback']!.isNotEmpty) ...[
-              const Text("Teacher’s Feedback & Grade 🎯",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              Text('Feedback: ${widget.assignment['feedback']}'),
-              Text(
-                  'Re-submission Required? ${widget.assignment['resubmission']}'),
+            if (assignment.feedback != null &&
+                assignment.feedback!.isNotEmpty) ...[
+              const Text(
+                'Teacher’s Feedback & Grade 🎯',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 6),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.blue[50],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text('Feedback: ${assignment.feedback!}'),
+              ),
             ],
           ],
         ),
