@@ -9,7 +9,7 @@ import 'core/providers/language_provider.dart';
 import 'core/providers/navigation_provider.dart';
 import 'core/providers/theme_provider.dart';
 import 'routes/app_routes.dart';
-import 'theme.dart/theme.dart';
+import 'theme/app_theme.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
