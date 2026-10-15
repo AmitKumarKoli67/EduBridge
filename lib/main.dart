@@ -32,11 +32,12 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => LanguageProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
       ],
-      child: Consumer2<LanguageProvider, AuthProvider>(
-        builder: (context, languageProvider, authProvider, child) {
+      child: Consumer3<LanguageProvider, AuthProvider, ThemeProvider>(
+        builder: (context, languageProvider, authProvider, themeProvider, child) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: AppTheme.lightTheme,
+            themeMode: themeProvider.themeMode,
             locale: languageProvider.currentLocale,
             supportedLocales: const [
               Locale('en'),
